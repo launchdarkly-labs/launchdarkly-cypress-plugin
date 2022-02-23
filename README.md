@@ -4,6 +4,10 @@
 
 **Required**: You need a LaunchDarkly account to use this plugin. Don't already have one? click [here](https://app.launchdarkly.com) to create one.
 
+## Install
+
+TODO: Add installation instructions after plublishing to npm
+
 ### Plugin setup
 
 1. Create a flag [LaunchDarkly feature flag](https://docs.launchdarkly.com/guides/best-practices/creating-flags) with a boolean variation. You can call this flag anything you like. Optionally, you can check the `This is a permanent flag` checkbox.
