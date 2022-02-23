@@ -3,10 +3,12 @@
 const { cypressLaunchDarklyPlugin } = require('../../lib');
 
 module.exports = async (on, config) => {
-  const ldConfig = {
-    sdkKey: "",
-    flagKey: "",
-    // baseUri: "",
-  }
-  return await cypressLaunchDarklyPlugin(config, ldConfig);
+  config = await cypressLaunchDarklyPlugin(config, {
+    sdkKey: "YOUR-SDK-KEY",
+    flagKey: "YOUR-FLA-KEY",
+  });
+
+  // add other logic here ...
+
+  return config;
 }
