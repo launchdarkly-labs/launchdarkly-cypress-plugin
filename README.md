@@ -10,7 +10,7 @@ TODO: Add installation instructions after plublishing to npm
 
 ### Setup
 
-1. Create a flag [LaunchDarkly feature flag](https://docs.launchdarkly.com/guides/best-practices/creating-flags) with a boolean variation. You can call this flag anything you like. Optionally, you can check the `This is a permanent flag` checkbox.
+1. Create a [LaunchDarkly feature flag](https://docs.launchdarkly.com/guides/best-practices/creating-flags) with a boolean variation. You can call this flag anything you like. Optionally, you can check the `This is a permanent flag` checkbox.
 
 **Optional** You can also create an environment for your Cypress tests.
 
