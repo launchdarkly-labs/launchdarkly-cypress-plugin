@@ -16,7 +16,11 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
-    "types": ["node", "cypress"],
+    "types": [
+      "node",
+      "cypress",
+      "cypress-grep"
+    ],
   },
   "include": ["src"],
   "exclude": ["node_modules", "**/__tests__/*"]

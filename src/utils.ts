@@ -31,7 +31,7 @@ export const parseTestDetails = (basePath: string, specFiles: string[]): TestDet
     const content = fs.readFileSync(path.join(basePath, specFile), 'utf-8');
     const result = getTestNames(content);
 
-    debugLog(`Tests and suite names found in ${specFile} for filtering: `, result.suiteNames, result.testNames);
+    // debugLog(`Tests and suite names found in ${specFile} for filtering: `, result.suiteNames, result.testNames);
 
     details.push({
       suiteNames: result.suiteNames,

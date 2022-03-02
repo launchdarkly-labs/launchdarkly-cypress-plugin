@@ -1,6 +1,5 @@
 import Launchdarkly, { LDClient, LDUser } from 'launchdarkly-node-server-sdk';
-import { CypressLDConfig, TestDetail } from './types';
-import { debugLog } from './utils';
+import { CypressLDConfig } from './types';
 
 let ldClient: LDClient;
 
@@ -19,20 +18,14 @@ const getLDClient = async (cfg: CypressLDConfig) => {
   return await ldClient.waitForInitialization();
 };
 
-export const shouldSkipTestFile = async (cfg: CypressLDConfig, td: TestDetail) => {
+export const shouldSkipSpec = async (cfg: CypressLDConfig, testOrSuiteName: string, key: string = 'cypress-ld-plugin-user') => {
   const client = await getLDClient(cfg);
   const user: LDUser = {
-    key: 'cypress-ld-plugin-user',
+    key,
     custom: {
-      suiteNames: td.suiteNames,
-      testNames: td.testNames,
-      filePath: td.filePath,
+      testOrSuiteName,
     },
   };
 
-  const result = await client.variation(cfg.flagKey, user, false);
-
-  debugLog(`Flag ${cfg.flagKey} evaluated to ${result} for the following tests: `, td);
-
-  return result;
+  return await client.variation(cfg.flagKey, user, false);
 };

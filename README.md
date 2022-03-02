@@ -1,6 +1,6 @@
-# LaunchDarkly Cypress test filter
+# LaunchDarkly Cypress Plugin (beta)
 
-> Filter cypress test files using LaunchDarkly feature flags
+> Filter cypress tests using LaunchDarkly feature flags
 
 **Required**: You need a LaunchDarkly account to use this plugin. Don't already have one? click [here](https://app.launchdarkly.com) to create one.
 
@@ -8,7 +8,7 @@
 
 TODO: Add installation instructions after plublishing to npm
 
-### Plugin setup
+### Setup
 
 1. Create a flag [LaunchDarkly feature flag](https://docs.launchdarkly.com/guides/best-practices/creating-flags) with a boolean variation. You can call this flag anything you like. Optionally, you can check the `This is a permanent flag` checkbox.
 
@@ -16,27 +16,29 @@ TODO: Add installation instructions after plublishing to npm
 
 2. Go to Account settings -> Projects, search for your environment and copy the SDK key for the environment you will be using.
 
-3. Load and register the plugin from your cypress [plugin file](https://on.cypress.io/writing-and-organizing-tests#Plugins-file).
+3. Load and configure the plugin from your cypress [plugin file](https://on.cypress.io/writing-and-organizing-tests#Plugins-file).
 
 **cypress/plugins/index.js**
 
-![Plugin Configuration](./images/config.png)
+![Plugin Configuration](./images/plugin-config.png)
 
 Note the `async` keyword on the exported function. Cypress will `await` the results of the Promise returned.
 
-## Filtering your tests
+4. Register the support configuration in your cypress support file.
 
-With your flag turned on and returning a default variation of `false`, you can target specific test suites or test files to skip in Cypress.
+**cypress/support/index.js**
 
-The plugin retrieves a variation from your flag based on three properties:
-- suiteNames - A string of test suite names. `['Integration Suite', 'Actions']`
-- testNames - A string array of test names. i.e `['blur off a DOM element', 'check a checkbox or radio element', 'click on a DOM element']`
-- filePath - the path including the name of the file being evaluated. i.e '2-advanced-examples/actions.spec.js'
+![Support Configuration](./images/support-config.png)
 
-When the flag evaluates to true, all tests in the file will be skipped by Cypress. 
+## Skipping your tests
 
-![Targeting tests](./images/targeting-tests.png)
+With your flag turned on and returning a default variation of `false`, you can target specific tests or suites using the `testOrSuiteName` attribute. See example flag configuration below.
+
+When the flag evaluates to true, the matched tests or suites will be skipped by Cypress. See the [Cypress docs](https://docs.cypress.io/guides/core-concepts/writing-and-organizing-tests#Test-statuses) for more details about test statuses.
+
+![Flag Configuration](./images/flag-configuration.png)
 
 ## Debug logs
 
 To see debug logs from this plugin, prefix your Cypress tests with `DEBUG=ld-plugin`. For example `DEBUG=ld-plugin npm run cypress`
+
