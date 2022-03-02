@@ -28,16 +28,24 @@ export const parseTestDetails = (basePath: string, specFiles: string[]): TestDet
   const details: TestDetail[] = [];
 
   for (const specFile of specFiles) {
-    const content = fs.readFileSync(path.join(basePath, specFile), 'utf-8');
-    const result = getTestNames(content);
+    try {
+      const filepath = path.join(basePath, specFile);
+      
+      debugLog('Processing: ', filepath);
 
-    // debugLog(`Tests and suite names found in ${specFile} for filtering: `, result.suiteNames, result.testNames);
+      const content = fs.readFileSync(filepath, 'utf-8');
+      const result = getTestNames(content);
 
-    details.push({
-      suiteNames: result.suiteNames,
-      testNames: result.testNames,
-      filePath: specFile,
-    });
+      // debugLog(`Tests and suite names found in ${specFile} for filtering: `, result.suiteNames, result.testNames);
+
+      details.push({
+        suiteNames: result.suiteNames,
+        testNames: result.testNames,
+        filePath: specFile,
+      });
+  } catch (ex) {
+    errorLog(`Error occurred while processing ${path.join(basePath, specFile)}`, ex)
+  }
   }
 
   return details;
