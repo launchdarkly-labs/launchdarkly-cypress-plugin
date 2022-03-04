@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import fg from 'fast-glob';
-import { debugLog, parseTestData, sanitizeFilesToIgnore, LD_PLUGIN_ENV_NAME } from './utils';
+import { debugLog, parseTestData, sanitizeFilesToIgnore, LD_PLUGIN_ENV_NAME, infoLog } from './utils';
 import { shouldSkipSpec } from './client';
 import { CypressLDConfig, TestData } from './types';
 
@@ -14,7 +14,12 @@ export const launchDarklyCypressPlugin = async (
     return cyCfg;
   }
 
-  console.log('Using LaunchDarkly cypress plugin');
+  if (!ldCfg.flagKey || !ldCfg.sdkKey) {
+    infoLog(`Invalid configuration. Missing SDK and/or flag key for LaunchDarkly cypress plugin`);
+    return cyCfg;
+  }
+
+  infoLog('Using LaunchDarkly cypress plugin');
 
   const specFiles = fg.sync(cyCfg.testFiles, {
     cwd: cyCfg.integrationFolder,
