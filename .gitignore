@@ -1,5 +1,5 @@
 node_modules
 /lib
-cypress/videos
-cypress/screenshots
+example/cypress/videos
+example/cypress/screenshots
 .env

@@ -1,4 +1,5 @@
 import Launchdarkly, { LDClient, LDUser } from 'launchdarkly-node-server-sdk';
+import { TestData } from './types';
 import { CypressLDConfig } from './types';
 
 let ldClient: LDClient;
@@ -18,12 +19,14 @@ const getLDClient = async (cfg: CypressLDConfig) => {
   return await ldClient.waitForInitialization();
 };
 
-export const shouldSkipSpec = async (cfg: CypressLDConfig, testOrSuiteName: string, key: string = 'cypress-ld-plugin-user') => {
+export const shouldSkipSpec = async (cfg: CypressLDConfig, data: TestData) => {
   const client = await getLDClient(cfg);
   const user: LDUser = {
-    key,
+    key: cfg.userKey ?? 'cypress-ld-plugin-user',
     custom: {
-      testOrSuiteName,
+      suiteName: data.suiteName,
+      testName: data.testName,
+      tags: data.tags,
     },
   };
 

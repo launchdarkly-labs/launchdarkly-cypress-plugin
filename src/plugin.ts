@@ -1,51 +1,40 @@
 /// <reference types="cypress" />
 
 import fg from 'fast-glob';
-import { debugLog, parseTestDetails, sanitizeFilesToIgnore } from './utils';
+import { debugLog, parseTestData, sanitizeFilesToIgnore, LD_PLUGIN_ENV_NAME } from './utils';
 import { shouldSkipSpec } from './client';
-import { CypressLDConfig } from './types';
+import { CypressLDConfig, TestData } from './types';
 
-export const launchDarklyCypressPlugin = async (
-  cyConfig: Cypress.PluginConfigOptions,
-  ldConfig: CypressLDConfig,
-): Promise<Cypress.PluginConfigOptions> => {
+export const launchDarklyCypressPlugin = async (cyCfg: Cypress.PluginConfigOptions, ldCfg: CypressLDConfig): Promise<Cypress.PluginConfigOptions> => {
   // ensure we have env configuration for cypress
-  if (!cyConfig || !cyConfig.env) {
-    return cyConfig;
+  if (!cyCfg || !cyCfg.env) {
+    return cyCfg;
   }
 
   console.log('Using LaunchDarkly cypress plugin');
 
-  const specFiles = fg.sync(cyConfig.testFiles, {
-    cwd: cyConfig.integrationFolder,
-    ignore: sanitizeFilesToIgnore(cyConfig.ignoreTestFiles),
+  const specFiles = fg.sync(cyCfg.testFiles, {
+    cwd: cyCfg.integrationFolder,
+    ignore: sanitizeFilesToIgnore(cyCfg.ignoreTestFiles),
     absolute: false,
   });
 
   debugLog(`Found ${specFiles.length} test files for filtering`);
 
-  const testDetails = parseTestDetails(cyConfig.integrationFolder, specFiles);
-  const testsToSkip: string[] = [];
+  const testData = parseTestData(cyCfg.integrationFolder, specFiles);
+  const testsToSkip: TestData[] = [];
 
-  for (const td of testDetails) {
-    const flattenedSpecs = [...td.testNames, ...td.suiteNames];
-
-    for (const specName of flattenedSpecs) {
-      const shouldSkip = await shouldSkipSpec(ldConfig, specName);
-      
-      debugLog('Checked: ', specName, ' shouldSkip', shouldSkip);
-
-      if (shouldSkip) {
-        testsToSkip.push(`-${specName}`);
-      }
+  for (const td of testData) {
+    const shouldSkip = await shouldSkipSpec(ldCfg, td);
+    
+    debugLog(`Evaluated suite: ${td.suiteName}, test: ${td.testName}, tags: ${td.tags}, skip: ${shouldSkip}`);
+    
+    if (shouldSkip) {
+      testsToSkip.push(td);
     }
   }
 
-  if (testsToSkip.length) {
-    const grep = testsToSkip.join(';');
-    cyConfig.env['grep'] = grep;
-    debugLog('Grep result: ', grep);
-  }
+  cyCfg.env[LD_PLUGIN_ENV_NAME] = testsToSkip;
 
-  return cyConfig;
+  return cyCfg;
 }

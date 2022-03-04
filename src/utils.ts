@@ -1,8 +1,8 @@
-import fs from 'fs';
-import { getTestNames } from 'find-test-names';
-import path from 'path';
-import { TestDetail } from './types';
+import { getTestNames, Structure } from 'find-test-names';
+import { TestData } from './types';
 import debug from 'debug';
+
+export const LD_PLUGIN_ENV_NAME = 'ld_plugin_env_var';
 
 const debugLogger = debug('ld-plugin')
 
@@ -18,35 +18,77 @@ export const warningLog = (statement: string, ...args: any[]) => {
   console.warn(`[cypress-ld-plugin][warn]: ${statement}`, ...args);
 };
 
+export const infoLog = (statement: string, ...args: any[]) => {
+  console.info(`[cypress-ld-plugin][info]: ${statement}`, ...args);
+};
+
 export const sanitizeFilesToIgnore = (files: string | string[]) => {
   if (Array.isArray(files) && files.length) return files;
   if (typeof files === 'string') return [files];
   return [];
 };
 
-export const parseTestDetails = (basePath: string, specFiles: string[]): TestDetail[] => {
-  const details: TestDetail[] = [];
+export const parseTestData = (basePath: string, specFiles: string[]): TestData[] => {
+  const allResults: TestData[] = [];
 
   for (const specFile of specFiles) {
+    const filepath = pathWrapper().join(basePath, specFile);
+    
     try {
-      const filepath = path.join(basePath, specFile);
-      
-      debugLog('Processing: ', filepath);
+      debugLog('Parsing: ', filepath);
 
-      const content = fs.readFileSync(filepath, 'utf-8');
-      const result = getTestNames(content);
+      const content = fsWrapper().readFileSync(filepath, 'utf-8');
+      const names = getTestNames(content, true);
+      const results = recursivelyParseTestSuites(names.structure);
 
-      // debugLog(`Tests and suite names found in ${specFile} for filtering: `, result.suiteNames, result.testNames);
+      debugLog(`Parsed tests for ${specFile}: `, results);
 
-      details.push({
-        suiteNames: result.suiteNames,
-        testNames: result.testNames,
-        filePath: specFile,
-      });
-  } catch (ex) {
-    errorLog(`Error occurred while processing ${path.join(basePath, specFile)}`, ex)
-  }
+      allResults.push(...results);
+    } catch (ex) {
+      errorLog(`Error occurred while processing ${filepath}`, ex)
+    }
   }
 
-  return details;
+  return allResults;
+};
+
+const recursivelyParseTestSuites = (structure: Structure) => {
+  const results: TestData[] = [];
+
+  for (const struct of structure) {
+    const tags = struct.tags ?? [];
+
+    // capture data for all tests in the suite
+    if (struct.type === 'suite') {
+      // get all tests for the suite
+      results.push(...struct.tests.map((t) => ({ suiteName: struct.name, testName: t.name, tags })))
+    }
+
+    // for parent of a nested suite... this allows us to target the `describe` scope without
+    // targeting individual nested suites/tests
+    if (struct.type === 'suite' && struct.tests && struct.suites.length > 0) {
+      results.push({ suiteName: struct.name, testName: '', tags })
+    }
+
+    // follow nested suites
+    const nestedSuites = (struct as any).suites as Structure
+    if (nestedSuites?.length > 0) {
+      const nestedResults = recursivelyParseTestSuites(nestedSuites);
+      results.push(...nestedResults);
+    }
+  }
+
+  return results;
+}
+
+// these wrappers helps to bypass webpack's error when fs and path are 
+// required at the top level of the file. Webpack complains if its configured to 
+// bundle code for the browser. This is not the cleanest way to handle this but
+// it works as temporary workaround.
+export const fsWrapper = () => { 
+  return eval('require')('fs');
+};
+
+export const pathWrapper = () => { 
+  return eval('require')('path');
 };

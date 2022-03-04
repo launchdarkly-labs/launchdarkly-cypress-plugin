@@ -4,11 +4,11 @@ export type CypressLDConfig = {
   eventsUri?: string;
   streamUri?: string;
   flagKey: string;
+  userKey?: string;
 };
 
-export type TestDetail = {
-  suiteNames: string[];
-  testNames: string[];
-  filePath: string;
-  fileName?: string;
-};
+export class TestData {
+  tags: string[] = [];
+  suiteName: string = '';
+  testName: string = '';
+}
