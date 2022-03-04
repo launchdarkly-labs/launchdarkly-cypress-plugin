@@ -4,7 +4,7 @@ import debug from 'debug';
 
 export const LD_PLUGIN_ENV_NAME = 'ld_plugin_env_var';
 
-const debugLogger = debug('ld-plugin')
+const debugLogger = debug('ld-plugin');
 
 export const debugLog = (statement: string, ...args: any[]) => {
   debugLogger(`[debug]: ${statement}`, ...args);
@@ -33,7 +33,7 @@ export const parseTestData = (basePath: string, specFiles: string[]): TestData[]
 
   for (const specFile of specFiles) {
     const filepath = pathWrapper().join(basePath, specFile);
-    
+
     try {
       debugLog('Parsing: ', filepath);
 
@@ -45,7 +45,7 @@ export const parseTestData = (basePath: string, specFiles: string[]): TestData[]
 
       allResults.push(...results);
     } catch (ex) {
-      errorLog(`Error occurred while processing ${filepath}`, ex)
+      errorLog(`Error occurred while processing ${filepath}`, ex);
     }
   }
 
@@ -61,17 +61,17 @@ const recursivelyParseTestSuites = (structure: Structure) => {
     // capture data for all tests in the suite
     if (struct.type === 'suite') {
       // get all tests for the suite
-      results.push(...struct.tests.map((t) => ({ suiteName: struct.name, testName: t.name, tags })))
+      results.push(...struct.tests.map((t) => ({ suiteName: struct.name, testName: t.name, tags })));
     }
 
     // for parent of a nested suite... this allows us to target the `describe` scope without
     // targeting individual nested suites/tests
     if (struct.type === 'suite' && struct.tests && struct.suites.length > 0) {
-      results.push({ suiteName: struct.name, testName: '', tags })
+      results.push({ suiteName: struct.name, testName: '', tags });
     }
 
     // follow nested suites
-    const nestedSuites = (struct as any).suites as Structure
+    const nestedSuites = (struct as any).suites as Structure;
     if (nestedSuites?.length > 0) {
       const nestedResults = recursivelyParseTestSuites(nestedSuites);
       results.push(...nestedResults);
@@ -79,16 +79,16 @@ const recursivelyParseTestSuites = (structure: Structure) => {
   }
 
   return results;
-}
+};
 
-// these wrappers helps to bypass webpack's error when fs and path are 
-// required at the top level of the file. Webpack complains if its configured to 
+// these wrappers helps to bypass webpack's error when fs and path are
+// required at the top level of the file. Webpack complains if its configured to
 // bundle code for the browser. This is not the cleanest way to handle this but
 // it works as temporary workaround.
-export const fsWrapper = () => { 
+export const fsWrapper = () => {
   return eval('require')('fs');
 };
 
-export const pathWrapper = () => { 
+export const pathWrapper = () => {
   return eval('require')('path');
 };

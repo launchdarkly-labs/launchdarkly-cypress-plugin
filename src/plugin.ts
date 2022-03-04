@@ -5,7 +5,10 @@ import { debugLog, parseTestData, sanitizeFilesToIgnore, LD_PLUGIN_ENV_NAME } fr
 import { shouldSkipSpec } from './client';
 import { CypressLDConfig, TestData } from './types';
 
-export const launchDarklyCypressPlugin = async (cyCfg: Cypress.PluginConfigOptions, ldCfg: CypressLDConfig): Promise<Cypress.PluginConfigOptions> => {
+export const launchDarklyCypressPlugin = async (
+  cyCfg: Cypress.PluginConfigOptions,
+  ldCfg: CypressLDConfig,
+): Promise<Cypress.PluginConfigOptions> => {
   // ensure we have env configuration for cypress
   if (!cyCfg || !cyCfg.env) {
     return cyCfg;
@@ -26,9 +29,9 @@ export const launchDarklyCypressPlugin = async (cyCfg: Cypress.PluginConfigOptio
 
   for (const td of testData) {
     const shouldSkip = await shouldSkipSpec(ldCfg, td);
-    
+
     debugLog(`Evaluated suite: ${td.suiteName}, test: ${td.testName}, tags: ${td.tags}, skip: ${shouldSkip}`);
-    
+
     if (shouldSkip) {
       testsToSkip.push(td);
     }
@@ -37,4 +40,4 @@ export const launchDarklyCypressPlugin = async (cyCfg: Cypress.PluginConfigOptio
   cyCfg.env[LD_PLUGIN_ENV_NAME] = testsToSkip;
 
   return cyCfg;
-}
+};
