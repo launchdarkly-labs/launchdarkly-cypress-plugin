@@ -1,12 +1,12 @@
 {
   "name": "launchdarkly-cypress-plugin",
-  "version": "0.2.0",
-  "description": "Filter cypress tests using LaunchDarkly feature flags",
+  "version": "0.3.0",
+  "description": "Skip cypress tests using LaunchDarkly feature flags",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "prepare": "npm run build",
-    "prepublishOnly": "npm test && npm run lint",
+    "prepublishOnly": "npm run lint",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags",
