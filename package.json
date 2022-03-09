@@ -14,12 +14,17 @@
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json",
+    "link": "npm link && cd example && npm link launchdarkly-cypress-plugin && cd -",
     "dev": "npm run build && cd example && npm run cypress",
     "dev:debug": "npm run build && cd example && DEBUG=ld-plugin npm run cypress"
   },
   "files": [
     "/lib/**/**"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/launchdarkly-labs/launchdarkly-cypress-plugin.git"
+  },
   "keywords": [
     "cypress",
     "cypress-plugin"

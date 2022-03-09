@@ -9,9 +9,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "launchdarkly-cypress-plugin": "https://github.com/launchdarkly-labs/launchdarkly-cypress-plugin"
-  },
+  "dependencies": {},
   "devDependencies": {
     "cypress": "^9.5.1"
   }
