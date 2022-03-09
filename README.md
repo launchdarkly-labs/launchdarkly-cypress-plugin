@@ -4,9 +4,17 @@
 
 **Required**: You need a LaunchDarkly account to use this plugin. Don't already have one? click [here](https://app.launchdarkly.com) to create one.
 
-## Install
+## Installation
 
-TODO: Add installation instructions after plublishing to npm
+```bash
+$ npm install launchdarkly-cypress-plugin
+```
+
+if using yarn run
+```bash
+$ yarn add launchdarkly-cypress-plugin
+```
+
 
 ### Setup
 
