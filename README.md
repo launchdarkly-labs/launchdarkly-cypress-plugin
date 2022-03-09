@@ -20,7 +20,7 @@ TODO: Add installation instructions after plublishing to npm
 
 **cypress/plugins/index.js**
 
-![Plugin Configuration](./images/plugin-config.png)
+![Plugin Configuration](./images/plugin-setup.png)
 
 Note the `async` keyword on the exported function. Cypress will `await` the results of the Promise returned.
 
@@ -28,15 +28,36 @@ Note the `async` keyword on the exported function. Cypress will `await` the resu
 
 **cypress/support/index.js**
 
-![Support Configuration](./images/support-config.png)
+![Support Configuration](./images/support-setup.png)
 
 ## Skipping your tests
 
-With your flag turned on and returning a default variation of `false`, you can target specific tests or suites using the `testOrSuiteName` attribute. See example flag configuration below.
+With your flag turned on and returning a default variation of `false`, you can target specific tests or suites using the `suiteName` or `testName` attributes. Additionally, if you configured the plugin with `customAttributes` you can include them in your targeting rules. 
+
+For example, if you configured the plugin as follows:
+```typescript
+module.exports = async (on, config) => {
+  config = await launchDarklyCypressPlugin(config, {
+    sdkKey: "YOUR-SDK-KEY",
+    flagKey: "YOUR-FLAG-KEY",
+    customAttributes: {
+      branchName: 'my-github-branch-name'
+    }
+  });
+ 
+  // add other logic here ...
+ 
+  return config;
+}
+```
+
+You can include `branchName` in your targeting rules. See example flag configuration below:
+
+![Flag Configuration](./images/flag-config.png)
 
 When the flag evaluates to true, the matched tests or suites will be skipped by Cypress. See the [Cypress docs](https://docs.cypress.io/guides/core-concepts/writing-and-organizing-tests#Test-statuses) for more details about test statuses.
 
-![Flag Configuration](./images/flag-configuration.png)
+
 
 ## Debug logs
 
