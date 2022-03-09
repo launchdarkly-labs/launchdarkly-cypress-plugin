@@ -5,6 +5,7 @@ export type CypressLDConfig = {
   streamUri?: string;
   flagKey: string;
   userKey?: string;
+  customAttributes?: { [key: string]: string };
 };
 
 export class TestData {
