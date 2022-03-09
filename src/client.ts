@@ -27,6 +27,7 @@ export const shouldSkipSpec = async (cfg: CypressLDConfig, data: TestData) => {
       suiteName: data.suiteName,
       testName: data.testName,
       tags: data.tags,
+      ...cfg.customAttributes,
     },
   };
 
