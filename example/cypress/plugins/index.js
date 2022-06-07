@@ -14,19 +14,16 @@
 
 const { launchDarklyCypressPlugin } = require('launchdarkly-cypress-plugin');
 
- /**
- * @type {Cypress.PluginConfig}
- */
 module.exports = async (on, config) => {
-   config = await launchDarklyCypressPlugin(config, {
-     sdkKey: "YOUR-SDK-KEY",
-     flagKey: "YOUR-FLAG-KEY",
-     customAttributes: {
-       exampleKey: 'exampleValue'
-     }
-   });
- 
-   // add other logic here ...
- 
-   return config;
- }
+  config = await launchDarklyCypressPlugin(config, {
+    sdkKey: 'YOUR-SDK-KEY',
+    flagKey: 'YOUR-FLAG-KEY',
+    customAttributes: {
+      exampleKey: 'exampleValue',
+    },
+  });
+
+  // add other logic here ...
+
+  return config;
+};
