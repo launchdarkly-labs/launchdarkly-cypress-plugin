@@ -22,14 +22,13 @@ export const launchDarklyCypressPlugin = async (
   infoLog('Using LaunchDarkly cypress plugin');
 
   const specFiles = fg.sync(cyCfg.specPattern, {
-    cwd: 'cypress/e2e',
     ignore: sanitizeFilesToIgnore(cyCfg.excludeSpecPattern),
     absolute: false,
   });
 
   debugLog(`Found ${specFiles.length} test files for filtering`);
 
-  const testData = parseTestData('cypress/e2e', specFiles);
+  const testData = parseTestData('', specFiles);
   const testsToSkip: TestData[] = [];
 
   for (const td of testData) {
