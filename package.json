@@ -14,13 +14,8 @@
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json",
-    "loadenv": "npx dotenv -e .env",
     "dev": "npm run build && npx cypress run",
-    "dev:debug": "npm run build && DEBUG=ld-plugin npx cypress run",
-    "release": "standard-version",
-    "release:minor": "standard-version --release-as minor",
-    "release:patch": "standard-version --release-as patch",
-    "release:major": "standard-version --release-as major"
+    "dev:debug": "npm run build && DEBUG=ld-plugin npx cypress run"
   },
   "files": [
     "/lib/**/**"

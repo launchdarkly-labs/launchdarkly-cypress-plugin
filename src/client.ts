@@ -1,7 +1,7 @@
 import Launchdarkly, { LDClient, LDMultiKindContext } from 'launchdarkly-node-server-sdk';
 import { TestContext } from './types';
 import { CypressLDConfig } from './types';
-import crypto from 'crypto'
+import crypto from 'crypto';
 
 let ldClient: LDClient;
 
@@ -33,13 +33,13 @@ export const shouldSkipSpec = async (cfg: CypressLDConfig, data: TestContext) =>
     cypress: {
       key: getKey('cypress', data),
       suite: data.suiteName,
-      test: data.testName
+      test: data.testName,
     },
-  }
-  
+  };
+
   return await client.variation(cfg.flagKey, ldContext, false);
 };
 
 const getKey = (prefix: string, data: TestContext) => {
-  return crypto.createHash('md5').update(`${prefix}-${data.suiteName}-${data.testName}`).digest('hex')
-}
+  return crypto.createHash('md5').update(`${prefix}-${data.suiteName}-${data.testName}`).digest('hex');
+};

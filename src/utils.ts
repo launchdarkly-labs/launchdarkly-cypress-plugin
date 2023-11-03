@@ -3,7 +3,7 @@ import { TestContext } from './types';
 import debug from 'debug';
 
 export const LD_PLUGIN_ENV_NAME = 'ld_plugin_env_var';
-const logPrefix = "LaunchDarkly Cypress Plugin"
+const logPrefix = 'LaunchDarkly Cypress Plugin';
 
 const debugLogger = debug('ld-plugin');
 
