@@ -12,15 +12,12 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
-const { launchDarklyCypressPlugin } = require('launchdarkly-cypress-plugin');
+const { launchDarklyCypressPlugin } = require('../../lib');
 
 module.exports = async (on, config) => {
   config = await launchDarklyCypressPlugin(config, {
-    sdkKey: 'YOUR-SDK-KEY',
-    flagKey: 'YOUR-FLAG-KEY',
-    customAttributes: {
-      exampleKey: 'exampleValue',
-    },
+    sdkKey: config.env.PLUGIN_SDK_KEY,
+    flagKey: config.env.PLUGIN_FLAG_KEY,
   });
 
   // add other logic here ...

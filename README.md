@@ -1,4 +1,4 @@
-# LaunchDarkly Cypress Plugin (beta)
+# LaunchDarkly Cypress Plugin
 
 > Filter cypress tests using LaunchDarkly feature flags
 
@@ -11,10 +11,10 @@ $ npm install launchdarkly-cypress-plugin
 ```
 
 if using yarn run
+
 ```bash
 $ yarn add launchdarkly-cypress-plugin
 ```
-
 
 ### Setup
 
@@ -26,11 +26,11 @@ $ yarn add launchdarkly-cypress-plugin
 
 3. Load and configure the plugin from your cypress [plugin file](https://on.cypress.io/writing-and-organizing-tests#Plugins-file).
 
-**cypress/plugins/index.js**
+**cypress.config.js**
 
 ![Plugin Configuration](./images/plugin-setup.png)
 
-Note the `async` keyword on the exported function. Cypress will `await` the results of the Promise returned.
+Note the `async` keyword on the `setupNodeEvents` function. Cypress will `await` the results of the Promise returned.
 
 4. Register the support configuration in your cypress support file.
 
@@ -40,34 +40,8 @@ Note the `async` keyword on the exported function. Cypress will `await` the resu
 
 ## Skipping your tests
 
-With your flag turned on and returning a default variation of `false`, you can target specific tests or suites using the `suiteName` or `testName` attributes. Additionally, if you configured the plugin with `customAttributes` you can include them in your targeting rules. 
-
-For example, if you configured the plugin as follows:
-```typescript
-module.exports = async (on, config) => {
-  config = await launchDarklyCypressPlugin(config, {
-    sdkKey: "YOUR-SDK-KEY",
-    flagKey: "YOUR-FLAG-KEY",
-    customAttributes: {
-      branchName: 'my-github-branch-name'
-    }
-  });
- 
-  // add other logic here ...
- 
-  return config;
-}
-```
-
-You can include `branchName` in your targeting rules. See example flag configuration below:
+With your flag turned on and returning a default variation of `false`, you can target specific tests or suites using the `suite` or `test` attributes from the `cypress` context kind. Your test suites and test names will be automatically populated in the targeting rule dropdowns for you.
 
 ![Flag Configuration](./images/flag-config.png)
 
 When the flag evaluates to true, the matched tests or suites will be skipped by Cypress. See the [Cypress docs](https://docs.cypress.io/guides/core-concepts/writing-and-organizing-tests#Test-statuses) for more details about test statuses.
-
-
-
-## Debug logs
-
-To see debug logs from this plugin, prefix your Cypress tests with `DEBUG=ld-plugin`. For example `DEBUG=ld-plugin npm run cypress`
-

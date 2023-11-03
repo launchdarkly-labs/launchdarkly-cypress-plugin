@@ -3,7 +3,7 @@
 import fg from 'fast-glob';
 import { debugLog, parseTestData, sanitizeFilesToIgnore, LD_PLUGIN_ENV_NAME, infoLog } from './utils';
 import { shouldSkipSpec } from './client';
-import { CypressLDConfig, TestData } from './types';
+import { CypressLDConfig, TestContext } from './types';
 
 export const launchDarklyCypressPlugin = async (
   cyCfg: Cypress.PluginConfigOptions,
@@ -18,7 +18,6 @@ export const launchDarklyCypressPlugin = async (
     infoLog(`Invalid configuration. Missing SDK and/or flag key for LaunchDarkly cypress plugin`);
     return cyCfg;
   }
-
   infoLog('Using LaunchDarkly cypress plugin');
 
   const specFiles = fg.sync(cyCfg.specPattern, {
@@ -29,14 +28,14 @@ export const launchDarklyCypressPlugin = async (
   debugLog(`Found ${specFiles.length} test files for filtering`);
 
   const testData = parseTestData('', specFiles);
-  const testsToSkip: TestData[] = [];
+  const testsToSkip: TestContext[] = [];
 
   for (const td of testData) {
     const shouldSkip = await shouldSkipSpec(ldCfg, td);
 
-    debugLog(`Evaluated suite: ${td.suiteName}, test: ${td.testName}, tags: ${td.tags}, skip: ${shouldSkip}`);
-
     if (shouldSkip) {
+      infoLog(`Skipped [Suite]: ${td.suiteName}, [Test name]: ${td.testName}`);
+
       testsToSkip.push(td);
     }
   }

@@ -1,15 +1,12 @@
 export type CypressLDConfig = {
   sdkKey: string;
+  flagKey: string;
   baseUri?: string;
   eventsUri?: string;
   streamUri?: string;
-  flagKey: string;
-  userKey?: string;
-  customAttributes?: { [key: string]: string };
 };
 
-export class TestData {
-  tags: string[] = [];
+export class TestContext {
   suiteName: string = '';
   testName: string = '';
 }
