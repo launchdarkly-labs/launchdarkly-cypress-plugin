@@ -4,13 +4,13 @@
 
 import { AsyncFunc, Func, Suite, Test, TestFunction } from 'mocha';
 import { infoLog, LD_PLUGIN_ENV_NAME } from './utils';
-import { TestData } from './types';
+import { TestContext } from './types';
 
 const _it: TestFunction = it;
 const _describe = describe;
 
 function launchDarklyCypressSupport() {
-  const testsToSkip: TestData[] = Cypress.env(LD_PLUGIN_ENV_NAME) ?? [];
+  const testsToSkip: TestContext[] = Cypress.env(LD_PLUGIN_ENV_NAME) ?? [];
 
   // prevent multiple registrations
   if (it.name === 'itProxy') {

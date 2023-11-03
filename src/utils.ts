@@ -1,8 +1,9 @@
 import { getTestNames, Structure } from 'find-test-names';
-import { TestData } from './types';
+import { TestContext } from './types';
 import debug from 'debug';
 
 export const LD_PLUGIN_ENV_NAME = 'ld_plugin_env_var';
+const logPrefix = "LaunchDarkly Cypress Plugin"
 
 const debugLogger = debug('ld-plugin');
 
@@ -11,15 +12,15 @@ export const debugLog = (statement: string, ...args: any[]) => {
 };
 
 export const errorLog = (statement: string, ...args: any[]) => {
-  console.error(`[cypress-ld-plugin][error]: ${statement}`, ...args);
+  console.error(`error: [${logPrefix}]: ${statement}`, ...args);
 };
 
 export const warningLog = (statement: string, ...args: any[]) => {
-  console.warn(`[cypress-ld-plugin][warn]: ${statement}`, ...args);
+  console.warn(`warning: [${logPrefix}]: ${statement}`, ...args);
 };
 
 export const infoLog = (statement: string, ...args: any[]) => {
-  console.info(`[cypress-ld-plugin][info]: ${statement}`, ...args);
+  console.info(`info: [${logPrefix}]: ${statement}`, ...args);
 };
 
 export const sanitizeFilesToIgnore = (files: string | string[]) => {
@@ -28,8 +29,8 @@ export const sanitizeFilesToIgnore = (files: string | string[]) => {
   return [];
 };
 
-export const parseTestData = (basePath: string, specFiles: string[]): TestData[] => {
-  const allResults: TestData[] = [];
+export const parseTestData = (basePath: string, specFiles: string[]): TestContext[] => {
+  const allResults: TestContext[] = [];
 
   for (const specFile of specFiles) {
     const filepath = pathWrapper().join(basePath, specFile);
@@ -53,21 +54,19 @@ export const parseTestData = (basePath: string, specFiles: string[]): TestData[]
 };
 
 const recursivelyParseTestSuites = (structure: Structure) => {
-  const results: TestData[] = [];
+  const results: TestContext[] = [];
 
   for (const struct of structure) {
-    const tags = struct.tags ?? [];
-
     // capture data for all tests in the suite
     if (struct.type === 'suite') {
       // get all tests for the suite
-      results.push(...struct.tests.map((t) => ({ suiteName: struct.name, testName: t.name, tags })));
+      results.push(...struct.tests.map((t) => ({ suiteName: struct.name, testName: t.name })));
     }
 
     // for parent of a nested suite... this allows us to target the `describe` scope without
     // targeting individual nested suites/tests
     if (struct.type === 'suite' && struct.tests && struct.suites.length > 0) {
-      results.push({ suiteName: struct.name, testName: '', tags });
+      results.push({ suiteName: struct.name, testName: '' });
     }
 
     // follow nested suites

@@ -1,6 +1,7 @@
-import Launchdarkly, { LDClient, LDUser } from 'launchdarkly-node-server-sdk';
-import { TestData } from './types';
+import Launchdarkly, { LDClient, LDMultiKindContext } from 'launchdarkly-node-server-sdk';
+import { TestContext } from './types';
 import { CypressLDConfig } from './types';
+import crypto from 'crypto'
 
 let ldClient: LDClient;
 
@@ -19,17 +20,26 @@ const getLDClient = async (cfg: CypressLDConfig) => {
   return await ldClient.waitForInitialization();
 };
 
-export const shouldSkipSpec = async (cfg: CypressLDConfig, data: TestData) => {
+export const shouldSkipSpec = async (cfg: CypressLDConfig, data: TestContext) => {
   const client = await getLDClient(cfg);
-  const user: LDUser = {
-    key: cfg.userKey ?? 'cypress-ld-plugin-user',
-    custom: {
+
+  const ldContext: LDMultiKindContext = {
+    kind: 'multi',
+    user: {
+      key: getKey('user', data),
       suiteName: data.suiteName,
       testName: data.testName,
-      tags: data.tags,
-      ...cfg.customAttributes,
     },
-  };
-
-  return await client.variation(cfg.flagKey, user, false);
+    cypress: {
+      key: getKey('cypress', data),
+      suite: data.suiteName,
+      test: data.testName
+    },
+  }
+  
+  return await client.variation(cfg.flagKey, ldContext, false);
 };
+
+const getKey = (prefix: string, data: TestContext) => {
+  return crypto.createHash('md5').update(`${prefix}-${data.suiteName}-${data.testName}`).digest('hex')
+}
