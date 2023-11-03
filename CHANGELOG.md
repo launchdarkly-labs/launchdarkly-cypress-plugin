@@ -4,11 +4,11 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [1.0.0](https://github.com/launchdarkly-labs/launchdarkly-cypress-plugin/compare/v0.4.1...v1.0.0) (2023-11-03)
 
-### [0.4.1](https://github.com/launchdarkly-labs/launchdarkly-cypress-plugin/compare/v0.4.0...v0.4.1) (2023-11-03)
-
 ### Features
 
 - upgraded LD SDK and cypress ([a2472fb](https://github.com/launchdarkly-labs/launchdarkly-cypress-plugin/commits/a2472fb00f2dd188ecafeb0104dbb3fc90413462))
+
+### [0.4.1](https://github.com/launchdarkly-labs/launchdarkly-cypress-plugin/compare/v0.4.0...v0.4.1) (2023-11-03)
 
 ### Bug Fixes
 
