@@ -35,7 +35,7 @@
     "@commitlint/config-conventional": "^18.1.0",
     "@types/debug": "^4.1.7",
     "@types/find-test-names": "^1.14.0",
-    "cypress": "^10.0.2",
+    "cypress": "^14.5.0",
     "husky": "^8.0.0",
     "prettier": "^2.5.1",
     "standard-version": "^9.5.0",
@@ -51,6 +51,6 @@
     "launchdarkly-node-server-sdk": "^7.0.3"
   },
   "peerDependencies": {
-    "cypress": "^13.4.0"
+    "cypress": "^13.4.0 || ^14.0.0"
   }
 }
